@@ -23,7 +23,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
-
+app.app_context().push()
+db.create_all()
 
 ##############################################################################
 # User signup/login/logout
@@ -320,3 +321,7 @@ def add_header(req):
     req.headers["Expires"] = "0"
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
+
+
+if __name__ == '__main__':
+    app.run()
