@@ -325,13 +325,6 @@ def add_header(req):
     return req
 
 
-# Logout Method
-
-@app.route('/logout', methods=["GET", "POST"])
-def logout():
-    
-
-
 
 
 if __name__ == '__main__':
