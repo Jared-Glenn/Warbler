@@ -114,7 +114,9 @@ def login():
 def logout():
     """Handle logout of user."""
 
-    # IMPLEMENT THIS
+    do_logout()
+    flash("You have successfully logged out!")
+    return redirect('/login')
 
 
 ##############################################################################
@@ -321,6 +323,15 @@ def add_header(req):
     req.headers["Expires"] = "0"
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
+
+
+# Logout Method
+
+@app.route('/logout', methods=["GET", "POST"])
+def logout():
+    
+
+
 
 
 if __name__ == '__main__':
