@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
-from models import db, connect_db, User, Message
+from models import db, connect_db, User, Message, Likes
 
 CURR_USER_KEY = "curr_user"
 
@@ -244,6 +244,29 @@ def profile():
     return render_template('users/edit.html', form=form, user=user)
 
 
+# Add Likes
+
+@app.route('/users/add_like/<message_id>', methods=["POST"])
+def add_like(message_id):
+    
+    message = Message.query.get_or_404(message_id)
+    
+    try:
+        like = Likes.query.filter_by(user_id=g.user.id, message_id=message.id).first()
+        
+        db.session.delete(like)
+        db.session.commit()
+    except:
+        new_like = Likes(user_id=g.user.id, message_id=message.id)
+        db.session.add(new_like)
+        db.session.commit()
+        
+    return redirect('/')
+
+
+
+
+
 @app.route('/users/delete', methods=["POST"])
 def delete_user():
     """Delete user."""
@@ -322,19 +345,15 @@ def homepage():
     """
 
     if g.user:
-        print(f"!!!!!!!!!!!!!!!!UsersFirst: {g.user.following} !!!!!!!!!!!!!")
         users = [g.user.id]
         for user in g.user.following:
             users.append(user.id)
-        print(f"!!!!!!!!!!!!!!!!UsersSecond: {users} !!!!!!!!!!!!!")
         messages = (Message
                     .query
                     .filter(Message.user_id.in_(users))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
-        
-        print(f"!!!!!!!!!!!!!!!Messages: {messages} !!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
         return render_template('home.html', messages=messages)
 
