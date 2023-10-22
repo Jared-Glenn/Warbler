@@ -43,6 +43,9 @@
         {% for msg in messages %}
           <li class="list-group-item">
             <a href="/messages/{{ msg.id  }}" class="message-link"/>
+            {% if msg.id in likes %}
+            <p>*</p>
+            {% endif %}
             <a href="/users/{{ msg.user.id }}">
               <img src="{{ msg.user.image_url }}" alt="" class="timeline-image">
             </a>
