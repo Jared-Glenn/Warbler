@@ -31,7 +31,7 @@ db.create_all()
 
 
 class UserModelTestCase(TestCase):
-    """Test views for messages."""
+    """Test users."""
 
     def setUp(self):
         """Create test client, add sample data."""
@@ -189,13 +189,33 @@ class UserModelTestCase(TestCase):
             db.session.commit()
           
     def test_authenticate(self):
-        pass
+        """Check if authenticate is working properly."""
         
+        test_user = User.signup("test_user", "testuser@testuser.com", "Password", None)
+        new_id = 999
+        test_user.id = new_id
           
-          
-          
-          
+        db.session.commit()
+        
+        self.assertEqual(User.authenticate("test_user", "Password"), test_user)
+        
+    def test_invalid_username(self):
+        """Check if authenticate doesn't work properly with invalid username."""
+        
+        test_user = User.signup("test_user", "testuser@testuser.com", "Password", None)
+        db.session.commit()
+        
+        self.assertFalse(User.authenticate("wrong_user", "Password"))
+        
+    def test_invalid_password(self):
+        """Check if authenticate doesn't work properly with invalid password."""
+        
+        test_user = User.signup("test_user", "testuser@testuser.com", "Password", None)
+        db.session.commit()
+        
+        self.assertFalse(User.authenticate("test_user", "wrongPassword"))
         
     def tearDown(self):
         """Clean up any fouled transaction."""
         db.session.rollback()
+        
