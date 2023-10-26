@@ -1,4 +1,4 @@
-bcrypt==4.0.1
+bcrypt==4.0.0
 blinker==1.6.3
 click==8.1.7
 DateTime==5.2
